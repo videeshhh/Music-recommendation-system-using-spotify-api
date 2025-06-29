@@ -6,8 +6,6 @@ Although Spotify doesn’t allow direct audio playback via API, the system provi
 
 ---
 
-![Spotify Recommender Banner](https://i.imgur.com/NwPhRkY.jpg)
-
 ---
 
 ## 🚀 Key Features
@@ -81,9 +79,4 @@ Although Spotify doesn’t allow direct audio playback via API, the system provi
 
 ---
 
-## 📦 Installation
 
-```bash
-git clone https://github.com/yourusername/music-recommender-knn.git
-cd music-recommender-knn
-pip install -r requirements.txt
