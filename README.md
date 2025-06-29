@@ -79,20 +79,6 @@ Although Spotify doesn’t allow direct audio playback via API, the system provi
 
 ---
 
-📁 music-recommender-knn
-├── app.py                # Flask Web Server
-├── recommend.py          # CLI Script
-├── model_knn.pkl         # Pre-trained ML model
-├── data/
-│   └── songs.csv         # Audio feature dataset
-├── utils.py              # Spotify & feature functions
-├── templates/
-│   ├── index.html
-│   └── recommended.html
-├── .env                  # Spotify credentials
-└── requirements.txt
-
----
 
 🙌 Acknowledgements
 🟢 Spotify for Developers
@@ -112,6 +98,11 @@ Feel free to fork, open issues, and submit pull requests. All ideas, improvement
 Don’t forget to ⭐️ the repo if this helped you or sparked your creativity!
 
 ---
+
+Preview Images 
+![image alt](https://github.com/Vaman223/Music-recommendation-system-using-spotify-api/blob/main/Screenshot%202025-06-29%20154959.png?raw=true)
+![image alt](https://github.com/Vaman223/Music-recommendation-system-using-spotify-api/blob/main/Screenshot%202025-06-29%20155021.png?raw=true)
+![image alt](https://github.com/Vaman223/Music-recommendation-system-using-spotify-api/blob/main/Screenshot%202025-06-29%20155050.png?raw=true)
 
 
 
