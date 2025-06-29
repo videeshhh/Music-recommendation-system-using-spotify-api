@@ -1,6 +1,6 @@
 # 🎶 Music Recommendation System using Spotify API & KNN
 
-This project is a **smart, content-based music recommendation system** that leverages **machine learning (KNN)** and **Spotify’s Web API** to recommend songs similar to a user-selected track. It suggests similar songs based on **audio features** and **engineered traits**, while dynamically fetching real-time **album covers and metadata** from Spotify.
+This project is a **smart, content-based music recommendation system** that leverages **machine learning (KNN)** and **Spotify’s Web API** to recommend songs similar to a user-selected track and also download cover real time. It suggests similar songs based on **audio features** and **engineered traits**, while dynamically fetching real-time **album covers and metadata** from Spotify.
 
 Although Spotify doesn’t allow direct audio playback via API, the system provides highly accurate recommendations and a visually rich experience with cover art, artist names, and genres. 🎨🎧
 
