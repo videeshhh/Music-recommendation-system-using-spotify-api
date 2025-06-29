@@ -79,4 +79,40 @@ Although Spotify doesn’t allow direct audio playback via API, the system provi
 
 ---
 
+📁 music-recommender-knn
+├── app.py                # Flask Web Server
+├── recommend.py          # CLI Script
+├── model_knn.pkl         # Pre-trained ML model
+├── data/
+│   └── songs.csv         # Audio feature dataset
+├── utils.py              # Spotify & feature functions
+├── templates/
+│   ├── index.html
+│   └── recommended.html
+├── .env                  # Spotify credentials
+└── requirements.txt
+
+---
+
+🙌 Acknowledgements
+🟢 Spotify for Developers
+
+🐍 Spotipy – Python Wrapper
+
+🔍 scikit-learn for KNN modeling
+
+💡 Everyone making open music datasets available for ML!
+
+📄 License
+This project is licensed under the MIT License. See LICENSE for details.
+
+🤝 Contributing
+Feel free to fork, open issues, and submit pull requests. All ideas, improvements, and features are welcome!
+
+Don’t forget to ⭐️ the repo if this helped you or sparked your creativity!
+
+---
+
+
+
 
