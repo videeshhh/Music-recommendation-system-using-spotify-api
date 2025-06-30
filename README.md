@@ -1,4 +1,4 @@
-# 🎶 Music Recommendation System using Spotify API & KNN
+#  Music Recommendation System using Spotify API & KNN
 
 This project is a **smart, content-based music recommendation system** that leverages **machine learning (KNN)** and **Spotify’s Web API** to recommend songs similar to a user-selected track and also download cover real time. It suggests similar songs based on **audio features** and **engineered traits**, while dynamically fetching real-time **album covers and metadata** from Spotify.
 
@@ -8,51 +8,51 @@ Although Spotify doesn’t allow direct audio playback via API, the system provi
 
 ---
 
-## 🚀 Key Features
+##  Key Features
 
-- 🧠 **ML-Powered Music Recommender** using K-Nearest Neighbors (KNN)
-- 📈 Complete **EDA & Feature Engineering** pipeline
-- 🎼 **Real-time album cover fetching** via Spotify Web API
-- 🎧 Uses **preprocessed music dataset** with rich audio features
-- 📦 Web interface powered by Flask with HTML templates
-- ❌ No playback – **Spotify playback is restricted via API**
-- 🗂️ Responsive results UI built with **`index.html`** and **`recommended.html`**
+-  **ML-Powered Music Recommender** using K-Nearest Neighbors (KNN)
+-  Complete **EDA & Feature Engineering** pipeline
+-  **Real-time album cover fetching** via Spotify Web API
+-  Uses **preprocessed music dataset** with rich audio features
+-  Web interface powered by Flask with HTML templates
+-  No playback – **Spotify playback is restricted via API**
+-  Responsive results UI built with **`index.html`** and **`recommended.html`**
 
 ---
 
-## 📊 How It Works – End-to-End Workflow
+##  How It Works – End-to-End Workflow
 
-### 🧹 Step 1: Data Collection & Cleaning
+###  Step 1: Data Collection & Cleaning
 
 - A fixed CSV dataset containing songs with Spotify audio features is used.
 - Features include:
   - `danceability`, `energy`, `acousticness`, `valence`, `tempo`, `loudness`, `instrumentalness`, etc.
 
-### 🧪 Step 2: EDA (Exploratory Data Analysis)
+###  Step 2: EDA (Exploratory Data Analysis)
 
 - Visualize genre distributions, feature correlations, and tempo ranges.
 - Identify outliers, missing values, and scale inconsistencies.
 
-### 🧬 Step 3: Feature Engineering
+###  Step 3: Feature Engineering
 
 - Create custom features:
   - **Mood Score** = `valence * energy`
   - **Tempo Clusters** – bucket songs into rhythmic categories
   - **Z-score scaling** or **StandardScaler** used for normalization
 
-### 🧠 Step 4: Model Training
+###  Step 4: Model Training
 
 - Train a **KNN model** (`scikit-learn`) on scaled numerical features
 - Model learns to identify "neighborhoods" of similar songs
 
-### 🎯 Step 5: Prediction
+###  Step 5: Prediction
 
 - On input (song name), we:
   - Search the song in the dataset
   - Extract its feature vector
   - Use **KNN** to find `n` closest songs in feature space
 
-### 🎨 Step 6: Spotify API Integration
+###  Step 6: Spotify API Integration
 
 - Use the `spotipy` library to:
   - Search for tracks by name and artist
@@ -62,7 +62,7 @@ Although Spotify doesn’t allow direct audio playback via API, the system provi
     - Album name
     - **Album cover image (live!)**
 
-> 📌 **Playback Note**: Spotify does not allow playing full or preview audio via the Web API without using embedded players or SDKs.
+>  **Playback Note**: Spotify does not allow playing full or preview audio via the Web API without using embedded players or SDKs.
 
 ---
 
@@ -80,22 +80,22 @@ Although Spotify doesn’t allow direct audio playback via API, the system provi
 ---
 
 
-🙌 Acknowledgements
-🟢 Spotify for Developers
+ Acknowledgements
+ Spotify for Developers
 
-🐍 Spotipy – Python Wrapper
+ Spotipy – Python Wrapper
 
-🔍 scikit-learn for KNN modeling
+ scikit-learn for KNN modeling
 
-💡 Everyone making open music datasets available for ML!
+ Everyone making open music datasets available for ML!
 
-📄 License
+ License
 This project is licensed under the MIT License. See LICENSE for details.
 
-🤝 Contributing
+ Contributing
 Feel free to fork, open issues, and submit pull requests. All ideas, improvements, and features are welcome!
 
-Don’t forget to ⭐️ the repo if this helped you or sparked your creativity!
+Don’t forget to  the repo if this helped you or sparked your creativity!
 
 ---
 
