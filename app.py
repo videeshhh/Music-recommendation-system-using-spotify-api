@@ -10,8 +10,8 @@ df = pd.read_csv("songs.csv")
 x_scaled = np.load("x_scaled.npy")
 model = pickle.load(open("knn_model.pkl", "rb"))
 
-SPOTIFY_CLIENT_ID = "4c12216d3caa4d34924fcd927e75bb17"
-SPOTIFY_CLIENT_SECRET = "109b406dc24d4b72afcde81c9ebe7032"
+SPOTIFY_CLIENT_ID = "Enter your client id"
+SPOTIFY_CLIENT_SECRET = "Enter your client secret"
 
 def get_spotify_token():
     auth_url = "https://accounts.spotify.com/api/token"
