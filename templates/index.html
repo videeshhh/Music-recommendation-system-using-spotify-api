@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Recommender</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1db954 0%, #1ed760 50%, #191414 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="50" cy="50" r="0.5" fill="%23000000" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 60px 50px;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1db954, #1ed760);
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(29, 185, 84, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo::before {
+            content: '♫';
+            font-size: 32px;
+            color: white;
+            font-weight: bold;
+        }
+
+        h2 {
+            color: #191414;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #191414, #1db954);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .search-form {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 20px 25px;
+            border: 2px solid #e1e5e9;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            outline: none;
+            backdrop-filter: blur(10px);
+        }
+
+        input[type="text"]:focus {
+            border-color: #1db954;
+            box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.1);
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+        }
+
+        input[type="text"]::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 1.2rem;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus + .search-icon {
+            color: #1db954;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, #1db954, #1ed760);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(29, 185, 84, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-width: 160px;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(29, 185, 84, 0.4);
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .feature {
+            text-align: center;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .feature:nth-child(1) { animation-delay: 0.2s; }
+        .feature:nth-child(2) { animation-delay: 0.4s; }
+        .feature:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            background: linear-gradient(135deg, #1db954, #1ed760);
+            box-shadow: 0 5px 15px rgba(29, 185, 84, 0.3);
+        }
+
+        .feature-text {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .floating-notes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .note {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 2rem;
+            animation: float 8s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .note:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .note:nth-child(2) { left: 30%; animation-delay: 2s; }
+        .note:nth-child(3) { left: 50%; animation-delay: 4s; }
+        .note:nth-child(4) { left: 70%; animation-delay: 6s; }
+        .note:nth-child(5) { left: 90%; animation-delay: 1s; }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 30px;
+                margin: 20px;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-notes">
+        <div class="note">♫</div>
+        <div class="note">♪</div>
+        <div class="note">♬</div>
+        <div class="note">♫</div>
+        <div class="note">♪</div>
+    </div>
+
+    <div class="container">
+        <div class="logo"></div>
+        <h2>Discover Music</h2>
+        <p class="subtitle">Find your next favorite songs with ML-powered recommendations</p>
+        
+        <form class="search-form" action="/recommend" method="POST">
+            <div class="input-container">
+                <input type="text" name="song" placeholder="Search for a song... (e.g. Shape of You)" required>
+                <div class="search-icon">🔍</div>
+            </div>
+            <button type="submit">Get Recommendations</button>
+        </form>
+
+          
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.querySelector('input[type="text"]');
+            const button = document.querySelector('button');
+            const form = document.querySelector('form');
+
+            // Add loading state on form submission
+            form.addEventListener('submit', function() {
+                button.innerHTML = '<span style="display: inline-block; animation: spin 1s linear infinite;">⟳</span> Searching...';
+                button.disabled = true;
+            });
+
+            // Add input animation
+            input.addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    this.style.transform = 'translateY(-2px)';
+                } else {
+                    this.style.transform = 'translateY(0)';
+                }
+            });
+
+            // Add keyboard shortcut
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '/' && e.target !== input) {
+                    e.preventDefault();
+                    input.focus();
+                }
+            });
+        });
+
+        // Add CSS for spin animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+<body>Developed by Videesh Sharma-Model training and implementation<br>
+UI designed in collaboration with Claude AI
+</body>
+<body>
+
+<script>
+(function() {
+  'use strict';
+
+  if (window.liquidGlass) {
+    window.liquidGlass.destroy();
+    console.log('Previous liquid glass effect removed.');
+  }
+
+  function smoothStep(a, b, t) {
+    t = Math.max(0, Math.min(1, (t - a) / (b - a)));
+    return t * t * (3 - 2 * t);
+  }
+
+  function length(x, y) {
+    return Math.sqrt(x * x + y * y);
+  }
+
+  function roundedRectSDF(x, y, width, height, radius) {
+    const qx = Math.abs(x) - width + radius;
+    const qy = Math.abs(y) - height + radius;
+    return Math.min(Math.max(qx, qy), 0) + length(Math.max(qx, 0), Math.max(qy, 0)) - radius;
+  }
+
+  function texture(x, y) {
+    return { type: 't', x, y };
+  }
+
+  function generateId() {
+    return 'liquid-glass-' + Math.random().toString(36).substr(2, 9);
+  }
+
+  class Shader {
+    constructor(options = {}) {
+      this.width = options.width || 100;
+      this.height = options.height || 100;
+      this.fragment = options.fragment || ((uv) => texture(uv.x, uv.y));
+      this.canvasDPI = 1;
+      this.id = generateId();
+      this.offset = 10;
+
+      this.mouse = { x: 0, y: 0 };
+      this.mouseUsed = false;
+
+      this.createElement();
+      this.setupEventListeners();
+      this.updateShader();
+    }
+
+    createElement() {
+      this.container = document.createElement('div');
+      this.container.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: ${this.width}px;
+        height: ${this.height}px;
+        overflow: hidden;
+        border-radius: 150px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25), 0 -10px 25px inset rgba(0, 0, 0, 0.15);
+        backdrop-filter: url(#${this.id}_filter) blur(0.25px) contrast(1.2) brightness(1.05) saturate(1.1);
+        z-index: 9999;
+        pointer-events: none;
+      `;
+
+      this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      this.svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      this.svg.setAttribute('width', '0');
+      this.svg.setAttribute('height', '0');
+      this.svg.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 9998;
+      `;
+
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+      filter.setAttribute('id', `${this.id}_filter`);
+      filter.setAttribute('filterUnits', 'userSpaceOnUse');
+      filter.setAttribute('colorInterpolationFilters', 'sRGB');
+      filter.setAttribute('x', '0');
+      filter.setAttribute('y', '0');
+      filter.setAttribute('width', this.width.toString());
+      filter.setAttribute('height', this.height.toString());
+
+      this.feImage = document.createElementNS('http://www.w3.org/2000/svg', 'feImage');
+      this.feImage.setAttribute('id', `${this.id}_map`);
+      this.feImage.setAttribute('width', this.width.toString());
+      this.feImage.setAttribute('height', this.height.toString());
+
+      this.feDisplacementMap = document.createElementNS('http://www.w3.org/2000/svg', 'feDisplacementMap');
+      this.feDisplacementMap.setAttribute('in', 'SourceGraphic');
+      this.feDisplacementMap.setAttribute('in2', `${this.id}_map`);
+      this.feDisplacementMap.setAttribute('xChannelSelector', 'R');
+      this.feDisplacementMap.setAttribute('yChannelSelector', 'G');
+
+      filter.appendChild(this.feImage);
+      filter.appendChild(this.feDisplacementMap);
+      defs.appendChild(filter);
+      this.svg.appendChild(defs);
+
+      this.canvas = document.createElement('canvas');
+      this.canvas.width = this.width * this.canvasDPI;
+      this.canvas.height = this.height * this.canvasDPI;
+      this.canvas.style.display = 'none';
+
+      this.context = this.canvas.getContext('2d');
+    }
+
+    setupEventListeners() {
+      document.addEventListener('mousemove', (e) => {
+        const rect = this.container.getBoundingClientRect();
+        this.mouse.x = (e.clientX - rect.left) / rect.width;
+        this.mouse.y = (e.clientY - rect.top) / rect.height;
+
+        this.container.style.left = `${e.clientX - this.width / 2}px`;
+        this.container.style.top = `${e.clientY - this.height / 2}px`;
+
+        this.updateShader();
+      });
+    }
+
+    updateShader() {
+      const mouseProxy = new Proxy(this.mouse, {
+        get: (target, prop) => {
+          this.mouseUsed = true;
+          return target[prop];
+        }
+      });
+
+      this.mouseUsed = false;
+
+      const w = this.width * this.canvasDPI;
+      const h = this.height * this.canvasDPI;
+      const data = new Uint8ClampedArray(w * h * 4);
+
+      let maxScale = 0;
+      const rawValues = [];
+
+      for (let i = 0; i < data.length; i += 4) {
+        const x = (i / 4) % w;
+        const y = Math.floor(i / 4 / w);
+        const pos = this.fragment({ x: x / w, y: y / h }, mouseProxy);
+        const dx = pos.x * w - x;
+        const dy = pos.y * h - y;
+        maxScale = Math.max(maxScale, Math.abs(dx), Math.abs(dy));
+        rawValues.push(dx, dy);
+      }
+
+      maxScale *= 0.5;
+
+      let index = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        const r = rawValues[index++] / maxScale + 0.5;
+        const g = rawValues[index++] / maxScale + 0.5;
+        data[i] = r * 255;
+        data[i + 1] = g * 255;
+        data[i + 2] = 0;
+        data[i + 3] = 255;
+      }
+
+      this.context.putImageData(new ImageData(data, w, h), 0, 0);
+      this.feImage.setAttributeNS('http://www.w3.org/1999/xlink', 'href', this.canvas.toDataURL());
+      this.feDisplacementMap.setAttribute('scale', (maxScale / this.canvasDPI).toString());
+    }
+
+    appendTo(parent) {
+      parent.appendChild(this.svg);
+      parent.appendChild(this.container);
+    }
+
+    destroy() {
+      this.svg.remove();
+      this.container.remove();
+      this.canvas.remove();
+    }
+  }
+
+  function createLiquidGlass() {
+    const shader = new Shader({
+      width: 80,
+      height: 80,
+      fragment: (uv, mouse) => {
+        const ix = uv.x - 0.5;
+        const iy = uv.y - 0.5;
+        const distanceToEdge = roundedRectSDF(ix, iy, 0.3, 0.3, 0.6);
+        const displacement = smoothStep(0.8, 0, distanceToEdge - 0.15);
+        const scaled = smoothStep(0, 1, displacement);
+        return texture(ix * scaled + 0.5, iy * scaled + 0.5);
+      }
+    });
+
+    shader.appendTo(document.body);
+    window.liquidGlass = shader;
+  }
+
+  createLiquidGlass();
+})();
+</script>
+
+</body>
+</html>
